@@ -18,11 +18,14 @@ class CanonicalSystem{
 
         double system_state;
 
+        int timesteps;
+
         CanonicalSystem(double step_size, double alpha_s, double run_time){
 
             this-> step_size = step_size;
             this-> run_time = run_time;
             this-> alpha_s = alpha_s;
+            this-> timesteps = int(this->run_time/this->step_size) + 1;
 
         }
 
@@ -35,11 +38,11 @@ class CanonicalSystem{
 
         std::vector<double> rollout(double tau=1.0){
 
-            int timesteps = int(run_time/step_size);
+            int timesteps = int(this->timesteps/tau);
             std::vector<double> system_track;
             reset();
 
-            for (int i=0; i<timesteps; i++);{
+            for (int i=0; i<timesteps; i++){
 
                 system_track.push_back(this->system_state);
                 step(tau);
@@ -64,5 +67,18 @@ class CanonicalSystem{
 };
 
 int main(){
+
+    //create a Canonical System Object
+    CanonicalSystem my_cs(0.01, 4.0, 1.0);
+
+    std::vector<double> traj;
+    traj = my_cs.rollout(0.8);
+
+    std::cout<<"  Size is : "<<traj.size()<<std::endl;
+    //Print the Sequence
+    for(int i=0; i<traj.size(); i++){
+        cout<<traj[i]<<endl;
+    }
+
     return 0;
 }
